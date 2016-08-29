@@ -1,0 +1,19 @@
+language : python
+sudo: false
+python:
+    - "3.4"
+services:
+    - redis-server
+
+before_install:
+    # - export LIBRARY_PATH=$HOME/.local/lib/:$LIBRARY_PATH
+    - export LD_LIBRARY_PATH=$HOME/.local/lib/:$LD_LIBRARY_PATH
+    - git clone --depth=1 https://github.com/lloyd/yajl.git
+    - cd yajl && ./configure --prefix=$HOME/.local/
+    - cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local/ && make && make install
+    - cd ..
+
+install: "pip install -r requirements.txt"
+script: 
+    - py.test --ignore tests/integration
+    - py.test tests/integration
